@@ -20,11 +20,6 @@ public class BookController {
     @Autowired
     private BookRepository bookRepository;
 
-    @GetMapping("/index")
-    public String index() {
-        return "index";
-    }
-
     @GetMapping("/booklist")
     public String bookList(Model model) {
         List<Book> books = bookRepository.findAll();
@@ -51,9 +46,17 @@ public class BookController {
         return "redirect:/booklist";
     }
 
+    
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String editBook(@PathVariable("id") Long bookId, Model model) {
-        
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + bookId));
+        model.addAttribute("book", book);
+        return "editbook";
+    }
+
+    @PostMapping("/books/update")
+    public String updateBook(@ModelAttribute Book book) {
+        bookRepository.save(book);
         return "redirect:/booklist";
     }
 }
