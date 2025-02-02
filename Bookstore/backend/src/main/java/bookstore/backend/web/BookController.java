@@ -2,32 +2,29 @@ package bookstore.backend.web;
 
 import bookstore.backend.domain.Book;
 import bookstore.backend.domain.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class BookController {
 
-    private final BookRepository bookRepository;
-
-    public BookController(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
+    @Autowired
+    private BookRepository bookRepository;
 
     @GetMapping("/index")
-    public List<Book> books() {
-        return bookRepository.findAll();
+    public String books() {
+        return "index";
     }
 
-    @PostMapping
-    public Book addBook(@RequestParam Book book) {
-        bookRepository.save(book);
-        return bookRepository.save(book);
+    @GetMapping("/booklist")
+    public String bookList(Model model) {
+        List<Book> books = bookRepository.findAll();
+        model.addAttribute("books", books);
+        return "booklist";
     }
 }
 
