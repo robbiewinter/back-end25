@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import bookstore.backend.domain.Book;
 import bookstore.backend.domain.BookRepository;
 
+
 @SpringBootApplication
 public class BackendApplication {
 
@@ -24,3 +25,4 @@ public class BackendApplication {
         };
     }
 }
+

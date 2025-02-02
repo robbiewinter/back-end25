@@ -16,7 +16,7 @@ public class BookController {
     private BookRepository bookRepository;
 
     @GetMapping("/index")
-    public String books() {
+    public String index() {
         return "index";
     }
 
