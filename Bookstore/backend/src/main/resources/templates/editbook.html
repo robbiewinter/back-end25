@@ -30,6 +30,13 @@
         </div>
         
         <div>
+            <label for="category">Category:</label>
+            <select id="category" name="category" th:field="*{category}">
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}" th:selected="${category.id == book.category.id}"></option>
+            </select>
+        </div>
+        
+        <div>
             <button type="submit">Save</button>
         </div>
     </form>

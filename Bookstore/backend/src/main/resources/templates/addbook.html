@@ -25,6 +25,13 @@
             <input type="text" id="publicationYear" th:field="*{publicationYear}"/>
         </div>
         <div>
+            <label for="category">Category:</label>
+            <select id="category" name="category" th:field="*{category}">
+                <option value="" disabled selected>Select a category</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+            </select>
+        </div>
+        <div>
             <button type="submit">Add Book</button>
         </div>
     </form>

@@ -1,12 +1,13 @@
 package bookstore.backend;
 
+import bookstore.backend.domain.Category;
+import bookstore.backend.domain.CategoryRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import bookstore.backend.domain.Book;
 import bookstore.backend.domain.BookRepository;
-
 
 @SpringBootApplication
 public class BackendApplication {
@@ -16,10 +17,21 @@ public class BackendApplication {
     }
 
     @Bean
-    CommandLineRunner runner(BookRepository bookRepository) {
+    CommandLineRunner runner(BookRepository bookRepository, CategoryRepository categoryRepository) {
         return args -> {
-            Book book = new Book("A Farewell to Arms", "Ernest Hemingway", "1234", 1929, 20.0);
-            bookRepository.save(book);
+            Category fiction = new Category("Fiction");
+            categoryRepository.save(fiction);
+
+            Category drama = new Category("Drama");
+            categoryRepository.save(drama);
+
+            Book book1 = new Book("A Farewell to Arms", "Ernest Hemingway", "1234", 1929, 20.0);
+            book1.setCategory(fiction);
+            bookRepository.save(book1);
+
+            Book book2 = new Book("Animal Farm", "George Orwell", "1235", 1945, 15.0);
+            book2.setCategory(drama);
+            bookRepository.save(book2);
 
             bookRepository.findAll().forEach(System.out::println);
         };

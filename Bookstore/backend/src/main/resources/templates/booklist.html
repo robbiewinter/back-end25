@@ -15,6 +15,7 @@
                 <th>Title</th>
                 <th>ISBN</th>
                 <th>Year</th>
+                <th>Category</th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +24,7 @@
                 <td th:text="${book.title}"></td>
                 <td th:text="${book.isbn}"></td>
                 <td th:text="${book.publicationYear}"></td>
+                <td th:text="${book.category.name}"></td>
                 <td>
                     <form th:action="@{/delete/{id}(id=${book.id})}" method="get">
                         <button type="submit" class="btn btn-danger">Delete</button>
@@ -33,7 +35,6 @@
                         <button type="submit" class="btn btn-warning">Edit</button>
                     </form>
                 </td>
-
             </tr>
         </tbody>
     </table>

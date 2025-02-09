@@ -1,7 +1,6 @@
 package bookstore.backend.web;
 
-import bookstore.backend.domain.Book;
-import bookstore.backend.domain.BookRepository;
+import bookstore.backend.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +19,9 @@ public class BookController {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @GetMapping("/booklist")
     public String bookList(Model model) {
         List<Book> books = bookRepository.findAll();
@@ -30,27 +32,30 @@ public class BookController {
     @GetMapping("/addbook")
     public String addBook(Model model) {
         model.addAttribute("book", new Book());
+        model.addAttribute("categories", categoryRepository.findAll());
         return "addbook";
     }
 
     @PostMapping("/addbook")
     public String addBookSubmit(@ModelAttribute Book book) {
+        Category category = categoryRepository.findById(book.getCategory().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid category Id:" + book.getCategory().getId()));
+        book.setCategory(category);
         bookRepository.save(book);
         return "redirect:/booklist";
     }
 
-    
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String deleteBook(@PathVariable("id") Long bookId, Model model) {
         bookRepository.deleteById(bookId);
         return "redirect:/booklist";
     }
 
-    
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
     public String editBook(@PathVariable("id") Long bookId, Model model) {
         Book book = bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException("Invalid book Id:" + bookId));
         model.addAttribute("book", book);
+        model.addAttribute("categories", categoryRepository.findAll());
         return "editbook";
     }
 
