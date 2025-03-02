@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
@@ -26,6 +29,11 @@ public class BookController {
     public String bookList(Model model) {
         List<Book> books = bookRepository.findAll();
         model.addAttribute("books", books);
+        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        model.addAttribute("username", username);
+        
         return "booklist";
     }
 
@@ -63,6 +71,17 @@ public class BookController {
     public String updateBook(@ModelAttribute Book book) {
         bookRepository.save(book);
         return "redirect:/booklist";
+    }
+
+    @GetMapping("/login")
+    public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "logout", required = false) String logout, Model model) {
+        if (error != null) {
+            model.addAttribute("error", "Username or password is invalid.");
+        }
+        if (logout != null) {
+            model.addAttribute("message", "You have been logged out successfully.");
+        }
+        return "login";
     }
 }
 
