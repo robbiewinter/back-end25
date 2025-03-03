@@ -2,6 +2,9 @@ package bookstore.backend;
 
 import bookstore.backend.domain.Category;
 import bookstore.backend.domain.CategoryRepository;
+import bookstore.backend.domain.User;
+import bookstore.backend.domain.UserRepository;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +20,7 @@ public class BackendApplication {
     }
 
     @Bean
-    CommandLineRunner runner(BookRepository bookRepository, CategoryRepository categoryRepository) {
+    CommandLineRunner runner(BookRepository bookRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
         return args -> {
             Category fiction = new Category("Fiction");
             categoryRepository.save(fiction);
@@ -34,6 +37,12 @@ public class BackendApplication {
             bookRepository.save(book2);
 
             bookRepository.findAll().forEach(System.out::println);
+
+            User user1 = new User("user1", "password", "USER", "user1@email");
+            User user2 = new User("admin1", "password", "ADMIN", "user2@email");
+
+            userRepository.save(user1);
+            userRepository.save(user2);
         };
     }
 }
