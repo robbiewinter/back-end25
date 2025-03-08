@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.List;
-
 @Controller
 public class BookController {
 
@@ -27,7 +25,7 @@ public class BookController {
 
     @GetMapping("/booklist")
     public String bookList(Model model) {
-        List<Book> books = bookRepository.findAll();
+        Iterable<Book> books = bookRepository.findAll();
         model.addAttribute("books", books);
         
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

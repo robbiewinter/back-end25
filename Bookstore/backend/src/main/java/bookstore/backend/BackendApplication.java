@@ -5,12 +5,15 @@ import bookstore.backend.domain.CategoryRepository;
 import bookstore.backend.domain.User;
 import bookstore.backend.domain.UserRepository;
 
+import java.util.Arrays;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import bookstore.backend.domain.Book;
 import bookstore.backend.domain.BookRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class BackendApplication {
@@ -38,11 +41,11 @@ public class BackendApplication {
 
             bookRepository.findAll().forEach(System.out::println);
 
-            User user1 = new User("user1", "password", "USER", "user1@email");
-            User user2 = new User("admin1", "password", "ADMIN", "user2@email");
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            User user1 = new User("user", encoder.encode("password"), "USER", "user1@email");
+            User user2 = new User("admin", encoder.encode("password"), "ADMIN", "user2@email");
 
-            userRepository.save(user1);
-            userRepository.save(user2);
+            userRepository.saveAll(Arrays.asList(user1, user2));
         };
     }
 }

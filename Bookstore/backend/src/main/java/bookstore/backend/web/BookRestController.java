@@ -5,7 +5,6 @@ import bookstore.backend.domain.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -15,7 +14,7 @@ public class BookRestController {
     private BookRepository bookRepository;
 
     @GetMapping("/books")
-    public List<Book> getAllBooks() {
+    public Iterable<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
