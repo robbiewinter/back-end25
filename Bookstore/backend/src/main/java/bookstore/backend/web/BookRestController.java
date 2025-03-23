@@ -2,24 +2,34 @@ package bookstore.backend.web;
 
 import bookstore.backend.domain.Book;
 import bookstore.backend.domain.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/books")
 public class BookRestController {
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-    @GetMapping("/books")
-    public Iterable<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public BookRestController(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
-    @GetMapping("/book/{id}")
-    public Optional<Book> getBookById(@PathVariable("id") Long bookId) {
-        return bookRepository.findById(bookId);
+    @GetMapping("/{id}")
+    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
+        Optional<Book> book = bookRepository.findById(id);
+        if (book.isPresent()) {
+            return ResponseEntity.ok(book.get());
+        } 
+        else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public Iterable<Book> getAllBooks() {
+        return bookRepository.findAll();
     }
 }

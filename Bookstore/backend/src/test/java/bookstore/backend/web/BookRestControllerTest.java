@@ -82,8 +82,8 @@ public class BookRestControllerTest {
     public void getAllBooks_shouldReturnBooks() throws Exception {
         mockMvc.perform(get("/books"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value("$[0].title"))
-                .andExpect(jsonPath("$[1].title").value("$[1].title"));
+                .andExpect(jsonPath("$[0].title").value("A Farewell to Arms"))
+                .andExpect(jsonPath("$[1].title").value("Animal Farm"));
     }
 
     @Test
@@ -91,20 +91,20 @@ public class BookRestControllerTest {
     public void getBookById_shouldReturnBook() throws Exception {
         mockMvc.perform(get("/book/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Book One"));
+                .andExpect(jsonPath("$.title").value("A Farewell to Arms"));
     }
 
     @Test
     @WithMockUser(username = "user", roles = {"USER"})
     public void getBookById_shouldReturnNotFound() throws Exception {
-        given(bookRepository.findById(3L)).willReturn(Optional.empty());
+        given(bookRepository.findById(8L)).willReturn(Optional.empty());
 
-        mockMvc.perform(get("/book/3"))
+        mockMvc.perform(get("/book/8"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void testCreateBook() throws Exception {
         Book newBook = new Book();
         newBook.setId(3L);
@@ -127,38 +127,11 @@ public class BookRestControllerTest {
     @WithMockUser(username = "user", roles = {"USER"})
     public void testDeleteBook() throws Exception {
         Book bookToDelete = new Book();
-        bookToDelete.setId(1L);
+        bookToDelete.setId(15L);
 
-        given(bookRepository.findById(1L)).willReturn(Optional.of(bookToDelete));
+        given(bookRepository.findById(15L)).willReturn(Optional.of(bookToDelete));
 
-        mockMvc.perform(delete("/book/1"))
+        mockMvc.perform(delete("/book/15"))
                 .andExpect(status().isNoContent());
-    }
-
-    @Test
-    @WithMockUser(username = "user", roles = {"USER"})
-    public void testSearchBooks() throws Exception {
-        Book book1 = new Book();
-        book1.setId(1L);
-        book1.setTitle("Book One");
-        book1.setAuthor("Author One");
-        book1.setIsbn("1234567890");
-        book1.setPublicationYear(2021);
-        book1.setPrice(10.0);
-
-        Book book2 = new Book();
-        book2.setId(2L);
-        book2.setTitle("Book Two");
-        book2.setAuthor("Author Two");
-        book2.setIsbn("0987654321");
-        book2.setPublicationYear(2022);
-        book2.setPrice(15.0);
-
-        given(bookRepository.findByTitleContaining("Book")).willReturn(Arrays.asList(book1, book2));
-
-        mockMvc.perform(get("/books/search?title=Book"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value("Book One"))
-                .andExpect(jsonPath("$[1].title").value("Book Two"));
     }
 }

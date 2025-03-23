@@ -10,15 +10,20 @@ import java.util.Arrays;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import bookstore.backend.domain.Book;
 import bookstore.backend.domain.BookRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
-public class BackendApplication {
-
-    public static void main(String[] args) {
+public class BackendApplication extends SpringBootServletInitializer {
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(BackendApplication.class);
+    }
+    public static void main(String[] args) throws Exception {
         SpringApplication.run(BackendApplication.class, args);
     }
 
